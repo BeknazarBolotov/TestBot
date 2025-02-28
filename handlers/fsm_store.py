@@ -4,6 +4,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from db import main_db
 import buttons
+from config import staff
 
 class StoreFSM(StatesGroup):
     name_product = State()
@@ -16,6 +17,9 @@ class StoreFSM(StatesGroup):
 
 
 async def start_fsm_store(message: types.Message):
+    if message.from_user.id not in staff:
+        await message.answer('У вас недостаточно прав для выполнения этого действия!⛔')
+        return
     await message.answer('Введите название товара:', reply_markup=buttons.cancel_fsm)
     await StoreFSM.name_product.set()
 
